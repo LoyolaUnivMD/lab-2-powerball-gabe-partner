@@ -1,0 +1,3 @@
+print out description of the program
+ask for the player's name
+...
