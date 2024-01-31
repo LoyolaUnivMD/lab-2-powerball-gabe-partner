@@ -1,3 +1,7 @@
 print out description of the program
 ask for the player's name
 ...
+
+Create a method that will get 6 random integers between 0-99  that will then be passed through the formatter and return them in an array
+Run a loop 10 times in the main body to print out those 6 integers 10 times
+Print out the text at the bottom with the formatted estimated prize amount
