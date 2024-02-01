@@ -10,22 +10,26 @@
 import java.util.Scanner;
 import java.text.DecimalFormat;
 import java.util.Random;
-class Lab2 {
+public class Lab2 {
 
 
     // Creating variables
     static Random random = new Random();
 
-    static DecimalFormat prizeFormat = new DecimalFormat("###,###,###");
+    static DecimalFormat prizeFormat = new DecimalFormat("###,###,###.##");
     public static void main(String[] args) {
-        long prize = 225938745L;
-        Scanner input = new Scanner(System.in);
+        int[] winningNumbers = {1,2,3,4,5};
+        int multiplier = 0;
+        Scanner scanner = new Scanner(System.in);
 
         System.out.println("CS 212 - Lab 2");
         System.out.println("This program generates 10 lottery tickets.");
         
         System.out.print("What's your name? ");
-        String customerName = input.nextLine().strip();
+        String customerName = scanner.nextLine().strip();
+
+        System.out.println("How much would you like to bet?");
+        double bet = scanner.nextDouble();
 
         System.out.println("Here are the tickets:");
 
@@ -35,40 +39,62 @@ class Lab2 {
         // For each loop get the numbers and print them out
         for(int i = 0; i < 10; i++){
 
-            numbers = getLotteryNumbers();
+            numbers = getLotteryNumbers(winningNumbers);
 
             System.out.print(numbers[0] + " " + numbers[1] + " " + numbers[2] + " " + numbers[3] + " " + numbers[4] + " " + numbers[5] );
             System.out.println();
+
+            // Keeps track of hits on winning numbers
+            multiplier += Integer.parseInt(numbers[6]);
+
+
+        }
+
+        // Calculates the new amount of money depending on the amount of hits
+        if (multiplier != 0) {
+            bet = Math.pow(bet, Math.pow(1.75, multiplier));
         }
 
         // Ending prints
         System.out.println("-----------------");
         System.out.println("Good luck " + customerName + "!");
-        System.out.println("Estimated Jackpot:");
-        System.out.println("$" + prizeFormat.format(prize));
+        System.out.println("Jackpot:");
+        System.out.println("$" + prizeFormat.format(bet));
         System.out.println("-----------------");
 
 
     }
 
-    static String[] getLotteryNumbers(){
+    static String[] getLotteryNumbers(int[] winningNumbers){
 
         // Desired format
         DecimalFormat lotteryNumFormat = new DecimalFormat("00");
 
         // Creates strings
         int[] lotteryNumbers = new int[6];
-        String[] formattedNumbers = new String[6];
+        String[] formattedNumbers = new String[7];
+        int multiplier = 0;
 
         // Have to use two for loops here, using Integer.parseInt method wasn't working for some reason, still same big O time though
         for (int i = 0; i < 6; i++){
-            lotteryNumbers[i] = random.nextInt(100);
+            int randomNumber = random.nextInt(100);
+            lotteryNumbers[i] = randomNumber;
+            // Checks if it's a winning number
+            for (int number : winningNumbers){
+                if (randomNumber == number){
+                    multiplier++;
+                }
+            }
+
         }
         int j = 0;
         for (int number : lotteryNumbers){
             formattedNumbers[j] = lotteryNumFormat.format(number);
             j++;
         }
+
+        // Passes the amount of hits back to the main method
+        formattedNumbers[6] = String.valueOf(multiplier);
 
         return formattedNumbers;
 
